@@ -70,6 +70,9 @@ public class SecurityConfigTest extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        // 配置没有权限访问跳转到自己的页面
+        http.exceptionHandling().accessDeniedPage("/unauth.html");
+
         http.formLogin()                    // 自定义自己编写的登录页面
             .loginPage("/login.html")       // 登录页面设置
             .loginProcessingUrl("/user/login")  // 登录访问路径，提交表单之后跳转的地址,可以看作一个中转站，这个步骤就是验证user的一个过程，是框架内帮助我们做的
@@ -77,7 +80,17 @@ public class SecurityConfigTest extends WebSecurityConfigurerAdapter {
             .and().authorizeRequests()
                 .antMatchers("/", "/test/hello", "/user/login").permitAll()     // 【设置哪些路劲可以直接访问，不需要认证】
                 // 当前登录的用户，只有具有了admins权限才可以访问这个路径
-                .antMatchers("/test/index").hasAuthority("admins")
+                // 【方法一：hasAuthority】
+                //.antMatchers("/test/index").hasAuthority("admins")
+
+                // 【方法二：hasAnyAuthority】
+//                .antMatchers("/test/index").hasAnyAuthority("admin, roles, aa, bb")
+
+                // 【方法三：hasRole】
+//                .antMatchers("/test/index").hasRole("role")
+
+                // 【方法四：hasAnyRole】
+                .antMatchers("/test/index").hasAnyRole("ro, role")
                 .anyRequest().authenticated()   // 所有的请求都应该登录认证之后可以访问
             .and().csrf().disable();        // 关闭csrf防护
     }

@@ -37,7 +37,7 @@ public class MyUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
             // 查询到了，就从得到的对象中获取用户名以及密码
-        List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("admins");
+        List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("aa, ROLE_AdA");
         System.out.println(s);
         return new User(users.getUsername(), new BCryptPasswordEncoder().encode(users.getPassword()), auths);
     }
